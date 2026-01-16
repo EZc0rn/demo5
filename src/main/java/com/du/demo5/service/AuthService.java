@@ -1,35 +1,35 @@
 package com.du.demo5.service;
 
+import com.du.demo5.entity.SellerSignUp;
+import com.du.demo5.repository.SellerRepository;
 import com.du.demo5.util.Sha512Util;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SellerRepository sellerRepository;
+    private static final String SALT = "DU_SALT_2026";
 
-    public AuthService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public AuthService(SellerRepository sellerRepository) {
+        this.sellerRepository = sellerRepository;
     }
 
-    public boolean login(String id, String pw) {
-        String sql = """
-            SELECT password, salt
-            FROM user_table
-            WHERE user_id = ?
-        """;
+    public boolean login(String sellComId, String sellComPw) {
 
-        return jdbcTemplate.query(sql, rs -> {
-            if (!rs.next()) return false;
+        Optional<SellerSignUp> sellerOpt =
+                sellerRepository.findBySellComId(sellComId);
 
-            String dbHash = rs.getString("password");
-            String salt = rs.getString("salt");
+        if (sellerOpt.isEmpty()) {
+            return false; // 아이디 없음
+        }
 
-            String inputHash = Sha512Util.hash(salt + pw);
-            return dbHash.equals(inputHash);
-        }, id);
+        SellerSignUp seller = sellerOpt.get();
+
+        String inputHash = Sha512Util.hash(SALT + sellComPw);
+
+        return inputHash.equals(seller.getSellComPw());
     }
 }
-
-

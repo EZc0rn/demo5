@@ -3,6 +3,7 @@ package com.du.demo5.util;
 import java.security.MessageDigest;
 
 public class Sha512Util {
+
     public static String hash(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");

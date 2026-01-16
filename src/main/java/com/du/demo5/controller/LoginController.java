@@ -1,9 +1,7 @@
 package com.du.demo5.controller;
 
 import com.du.demo5.service.AuthService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,41 +14,17 @@ public class LoginController {
         this.authService = authService;
     }
 
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/login";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
     @PostMapping("/login")
     public String login(
-            @RequestParam String id,
-            @RequestParam String pw,
-            HttpSession session
+            @RequestParam String sellComId,
+            @RequestParam String sellComPw
     ) {
-        if (authService.login(id, pw)) {
-            session.setAttribute("USER_ID", id); // ASP Session("USER_ID")
-            return "redirect:/main";
+        boolean success = authService.login(sellComId, sellComPw);
+
+        if (success) {
+            return "redirect:/main"; // 로그인 성공
+        } else {
+            return "redirect:/login?error";
         }
-
-        return "redirect:/login?error";
-    }
-
-    @GetMapping("/main")
-    public String main(HttpSession session) {
-        if (session.getAttribute("USER_ID") == null) {
-            return "redirect:/login";
-        }
-        return "main";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
     }
 }
