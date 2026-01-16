@@ -1,7 +1,10 @@
 package com.du.demo5.controller;
 
 import com.du.demo5.service.AuthService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -14,6 +17,17 @@ public class LoginController {
         this.authService = authService;
     }
 
+    /**
+     * 로그인 페이지 이동
+     */
+    @GetMapping({"/", "/login"})
+    public String loginPage() {
+        return "login"; // templates/login.html
+    }
+
+    /**
+     * 로그인 처리
+     */
     @PostMapping("/login")
     public String login(
             @RequestParam String sellComId,
@@ -27,4 +41,14 @@ public class LoginController {
             return "redirect:/login?error";
         }
     }
+
+    /**
+     * 로그아웃
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
+

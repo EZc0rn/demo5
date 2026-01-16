@@ -20,7 +20,7 @@ public class AuthService {
     public boolean login(String sellComId, String sellComPw) {
 
         Optional<SellerSignUp> sellerOpt =
-                sellerRepository.findBySellComId(sellComId);
+                Optional.ofNullable(sellerRepository.findBySellComId(sellComId));
 
         if (sellerOpt.isEmpty()) {
             return false; // 아이디 없음
