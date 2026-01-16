@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <script>
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                document.getElementById("loginForm").submit();
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h2>LOGIN</h2>
+
+<!-- 로그인 실패 시 에러 메시지 -->
+<div style="color:red;">
+    <p th:if="${param.error}">아이디 또는 비밀번호가 올바르지 않습니다.</p>
+</div>
+
+<form method="post" action="/login">
+    <input type="text" name="sellComId" placeholder="아이디" />
+    <input type="password" name="sellComPw" placeholder="비밀번호" />
+    <button type="submit">로그인</button>
+</form>
+
+
+
+</body>
+</html>
